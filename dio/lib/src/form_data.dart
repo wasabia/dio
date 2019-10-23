@@ -74,13 +74,24 @@ class FormData {
   /// Returns the header string for a file. The return value is guaranteed to
   /// contain only ASCII characters.
   String _headerForFile(MapEntry<String, MultipartFile> entry) {
+    // var file = entry.value;
+    // var header = 'content-type: ${file.contentType}\r\n'
+    //     'content-disposition: form-data; name="${_browserEncode(entry.key)}"';
+
+    // if (file.filename != null) {
+    //   header = '$header; filename="${_browserEncode(file.filename)}"';
+    // }
+    // return '$header\r\n\r\n';
+
     var file = entry.value;
-    var header = 'content-type: ${file.contentType}\r\n'
-        'content-disposition: form-data; name="${_browserEncode(entry.key)}"';
+    var header = 'content-disposition: form-data; name="${_browserEncode(entry.key)}"';
 
     if (file.filename != null) {
-      header = '$header; filename="${_browserEncode(file.filename)}"';
+      header = '$header; filename="${_browserEncode(file.filename)}"\r\nContent-type: ${file.contentType}';
+    } else {
+      header = '$header;\r\nContent-type: ${file.contentType}';
     }
+
     return '$header\r\n\r\n';
   }
 
